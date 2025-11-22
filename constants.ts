@@ -9,7 +9,8 @@ export const MARCO_DATA = {
     email: "marco.su@edu.unifi.it",
     secondaryEmail: "2422864901@qq.com",
     instagram: "https://www.instagram.com/sumarcoooo",
-    linkedin: "https://www.linkedin.com/" // Placeholder
+    linkedin: "https://www.linkedin.com/", // Placeholder
+    formspreeId: "mdkjwwwq" // Your Formspree Endpoint ID
   },
   summary: "I bridge the gap between logistics management and digital innovation. With a strong foundation in supply chain dynamics and a passion for data analysis (Python) and design (Figma/Photoshop), I create efficient, visually clear solutions for complex operational problems.",
   skills: [
