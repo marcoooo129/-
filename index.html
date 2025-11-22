@@ -20,9 +20,17 @@
         font-family: 'Inter', sans-serif;
         letter-spacing: -0.04em;
       }
+
+      /* Utility for enforcing the heavy italic theme */
+      .font-heavy-italic {
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: -0.05em;
+      }
       
-      /* Cinematic Noise Texture */
+      /* Cinematic Noise Texture - OPTIMIZED: Only show on desktop to prevent mobile lag */
       .bg-noise {
+        display: none; /* Default hidden on mobile */
         position: fixed;
         top: 0;
         left: 0;
@@ -33,6 +41,12 @@
         opacity: 0.06;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
         mix-blend-mode: overlay;
+      }
+      
+      @media (min-width: 768px) {
+        .bg-noise {
+          display: block;
+        }
       }
 
       /* Interactive Floating Text */
@@ -47,22 +61,26 @@
         padding-right: 0.15em;
         padding-bottom: 0.1em;
         padding-top: 0.1em;
-        margin-right: -0.05em; /* Compensate slightly for the padding to keep tracking tight */
+        margin-right: -0.05em; 
       }
       
-      .char-float:hover {
-        transform: translateY(-15px) skewX(-10deg) scale(1.05);
-        color: #10b981; /* Emerald 500 */
-        text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
-        -webkit-text-fill-color: #10b981 !important;
+      /* OPTIMIZED: Only trigger heavy hover calculations on devices that actually have hover (mouse) */
+      @media (hover: hover) {
+        .char-float:hover {
+          transform: translateY(-15px) skewX(-10deg) scale(1.05);
+          color: #10b981; 
+          text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+          -webkit-text-fill-color: #10b981 !important;
+        }
       }
 
-      /* Scroll Reveal Animation */
+      /* Scroll Reveal Animation - OPTIMIZED for GPU */
       .reveal-on-scroll {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s cubic-bezier(0.2, 0, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
         will-change: opacity, transform;
+        backface-visibility: hidden; /* Prevents flickering on mobile */
       }
       .reveal-on-scroll.is-visible {
         opacity: 1;

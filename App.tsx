@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Instagram, Mail, MessageSquare, ArrowRight, BookOpen, MapPin } from 'lucide-react';
 import AIChat from './components/AIChat';
@@ -31,11 +30,11 @@ function App() {
   const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
-    // Scroll Reveal Observer
+    // Scroll Reveal Observer - Optimized for Mobile Performance
     const observerOptions = {
       root: null,
-      rootMargin: '0px',
-      threshold: 0.1
+      rootMargin: '100px', // Trigger animation 100px before element enters screen (prevents "invisible" elements on fast scroll)
+      threshold: 0.05      // Trigger almost immediately when edge touches
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -99,7 +98,7 @@ function App() {
       {/* Opening Animation */}
       {showIntro && <Intro onComplete={() => setShowIntro(false)} />}
 
-      {/* Cinematic Noise Overlay */}
+      {/* Cinematic Noise Overlay - Optimized in CSS to only show on Desktop */}
       <div className="bg-noise"></div>
 
       {/* Ambient Dynamic Background */}
@@ -155,26 +154,26 @@ function App() {
               {/* Adjusted for Mobile: using VW units to ensure fit */}
               <div className="mb-8 md:mb-10 select-none leading-[0.9] -ml-1">
                 {/* STRATEGY */}
-                <div className="text-[13vw] sm:text-[6rem] md:text-[8rem] lg:text-[7rem] xl:text-[7rem] font-bold tracking-tight mb-1">
+                <div className="text-[13vw] sm:text-[6rem] md:text-[8rem] lg:text-[7.5rem] xl:text-[9rem] font-black italic tracking-[-0.04em] mb-1">
                   <InteractiveText 
                     text="STRATEGY" 
-                    gradientClass="text-white drop-shadow-2xl"
+                    gradientClass="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-gray-400 drop-shadow-2xl"
                   />
                 </div>
                 
                 {/* & DESIGN */}
-                <div className="flex items-center flex-wrap gap-x-3 md:gap-x-6 text-[13vw] sm:text-[6rem] md:text-[8rem] lg:text-[7rem] xl:text-[7rem] font-bold tracking-tight mb-4">
-                  <span className="char-float text-emerald-400">&</span>
+                <div className="flex items-center flex-wrap gap-x-3 md:gap-x-6 text-[13vw] sm:text-[6rem] md:text-[8rem] lg:text-[7.5rem] xl:text-[9rem] font-black italic tracking-[-0.04em] mb-1">
+                  <span className="char-float text-emerald-400 transform skew-x-[-10deg]">&</span>
                   <InteractiveText 
                     text="DESIGN" 
                     gradientClass="text-emerald-400 drop-shadow-[0_0_30px_rgba(16,185,129,0.2)]"
                   />
                 </div>
                 
-                {/* PORTFOLIO Subtitle/Badge */}
+                {/* PORTFOLIO */}
                 <div className="flex items-center gap-6 mt-4">
-                   <div className="h-[2px] w-16 md:w-32 bg-gradient-to-r from-emerald-500 to-transparent"></div>
-                   <span className="text-gray-400 font-mono text-sm md:text-xl tracking-[0.4em] uppercase">
+                   <div className="h-[2px] w-16 md:w-24 bg-gray-600"></div>
+                   <span className="text-gray-400 font-mono text-sm md:text-lg tracking-widest uppercase">
                      Portfolio 2025
                    </span>
                 </div>
