@@ -1,3 +1,4 @@
+
 export enum SectionType {
   ABOUT = 'about',
   EXPERIENCE = 'experience',
@@ -6,32 +7,39 @@ export enum SectionType {
   CONTACT = 'contact'
 }
 
+export type Language = 'en' | 'it';
+
+export interface LocalizedString {
+  en: string;
+  it: string;
+}
+
 export interface ExperienceItem {
   id: string;
-  role: string;
+  role: LocalizedString;
   company: string;
-  period: string;
-  location: string;
-  description: string;
+  period: LocalizedString;
+  location: LocalizedString;
+  description: LocalizedString;
   tags: string[];
 }
 
 export interface EducationItem {
   id: string;
   school: string;
-  degree: string;
-  period: string;
-  location: string;
-  details: string[];
+  degree: LocalizedString;
+  period: LocalizedString;
+  location: LocalizedString;
+  details: LocalizedString[];
 }
 
 export interface ProjectItem {
   id: string;
-  title: string;
-  role: string;
-  period: string;
-  description: string;
-  impact: string;
+  title: LocalizedString;
+  role: LocalizedString;
+  period: LocalizedString;
+  description: LocalizedString;
+  impact: LocalizedString;
 }
 
 export interface ChatMessage {

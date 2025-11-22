@@ -57,6 +57,34 @@
         -webkit-text-fill-color: #10b981 !important;
       }
 
+      /* Scroll Reveal Animation */
+      .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.2, 0, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+        will-change: opacity, transform;
+      }
+      .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Abstract Project Visual Animations */
+      @keyframes float-slow {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+      @keyframes pulse-glow {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+      }
+      .float-animation {
+        animation: float-slow 6s ease-in-out infinite;
+      }
+      .pulse-animation {
+        animation: pulse-glow 4s ease-in-out infinite;
+      }
+
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 5px;

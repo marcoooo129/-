@@ -1,14 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
-import { Instagram, Linkedin, Mail, MessageSquare, ArrowRight, Phone, MapPin } from 'lucide-react';
+import { Instagram, Mail, MessageSquare, ArrowRight, BookOpen, MapPin } from 'lucide-react';
 import AIChat from './components/AIChat';
 import Timeline from './components/Timeline';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import { MARCO_DATA } from './constants';
+import Intro from './components/Intro';
+import { MARCO_DATA, UI_TEXT } from './constants';
+import { Language } from './types';
 
 // Helper component for floating text
 const InteractiveText = ({ text, className = "", gradientClass = "" }: { text: string, className?: string, gradientClass?: string }) => (
-  <span className={`inline-block whitespace-pre ${className}`}>
+  <span className={`inline-block whitespace-pre-wrap ${className}`}>
     {text.split("").map((char, index) => (
       <span 
         key={index} 
@@ -24,9 +27,43 @@ const InteractiveText = ({ text, className = "", gradientClass = "" }: { text: s
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatInitialInput, setChatInitialInput] = useState('');
+  const [lang, setLang] = useState<Language>('en');
+  const [showIntro, setShowIntro] = useState(true);
 
-  const handleContact = (type: 'email' | 'phone' | 'instagram' | 'linkedin') => {
-    const { email, phone, instagram, linkedin } = MARCO_DATA.contacts;
+  useEffect(() => {
+    // Scroll Reveal Observer
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target); // Only animate once
+        }
+      });
+    }, observerOptions);
+
+    // Delay slightly to ensure DOM is ready
+    setTimeout(() => {
+      const elements = document.querySelectorAll('.reveal-on-scroll');
+      elements.forEach(el => observer.observe(el));
+    }, 100);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const toggleLanguage = () => {
+    setLang(prev => prev === 'en' ? 'it' : 'en');
+  };
+
+  const t = UI_TEXT;
+
+  const handleContact = (type: 'email' | 'phone' | 'instagram') => {
+    const { email, phone, instagram } = MARCO_DATA.contacts;
     
     switch (type) {
       case 'email':
@@ -46,16 +83,12 @@ function App() {
       case 'instagram':
         window.open(instagram, '_blank');
         break;
-      case 'linkedin':
-        window.open(linkedin, '_blank');
-        break;
       default:
         break;
     }
   };
 
   const handleProjectClick = (projectName: string) => {
-    // This will now pre-fill the subject line of the contact form
     setChatInitialInput(projectName);
     setIsChatOpen(true);
   };
@@ -63,213 +96,180 @@ function App() {
   return (
     <div className="min-h-screen bg-[#030303] text-gray-200 relative selection:bg-emerald-500/30 selection:text-emerald-200 overflow-x-hidden font-sans">
       
+      {/* Opening Animation */}
+      {showIntro && <Intro onComplete={() => setShowIntro(false)} />}
+
       {/* Cinematic Noise Overlay */}
       <div className="bg-noise"></div>
 
       {/* Ambient Dynamic Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-emerald-900/5 rounded-full blur-[150px] opacity-30" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-indigo-900/5 rounded-full blur-[150px] opacity-20" />
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] md:w-[1000px] h-[600px] md:h-[1000px] bg-emerald-900/5 rounded-full blur-[100px] md:blur-[150px] opacity-30" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-indigo-900/5 rounded-full blur-[100px] md:blur-[150px] opacity-20" />
       </div>
 
       <div className="relative z-10">
         {/* Premium Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-300 backdrop-blur-xl border-b border-white/[0.03] bg-black/40">
+        <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-12 py-4 md:py-6 transition-all duration-300 backdrop-blur-xl border-b border-white/[0.03] bg-black/40 reveal-on-scroll">
           <div className="max-w-8xl mx-auto flex justify-between items-center">
-            <div className="font-black italic text-xl tracking-tighter text-white cursor-default select-none hover:text-emerald-500 transition-colors duration-300">
+            <div className="font-black italic text-lg md:text-xl tracking-tighter text-white cursor-default select-none hover:text-emerald-500 transition-colors duration-300">
               MARCO.SU
             </div>
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-4 md:gap-10">
               <div className="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-gray-400">
-                <a href="#projects" className="hover:text-white hover:scale-105 transition-all duration-300">Work</a>
-                <a href="#experience" className="hover:text-white hover:scale-105 transition-all duration-300">Journey</a>
-                <a href="#skills" className="hover:text-white hover:scale-105 transition-all duration-300">Arsenal</a>
+                <a href="#projects" className="hover:text-white hover:scale-105 transition-all duration-300">{t.nav.work[lang]}</a>
+                <a href="#experience" className="hover:text-white hover:scale-105 transition-all duration-300">{t.nav.journey[lang]}</a>
+                <a href="#skills" className="hover:text-white hover:scale-105 transition-all duration-300">{t.nav.arsenal[lang]}</a>
               </div>
-              <div className="flex gap-6">
-                <button onClick={() => handleContact('email')} className="text-gray-400 hover:text-white transition-all hover:scale-110" title="Email"><Mail size={20} strokeWidth={1.5} /></button>
-                <button onClick={() => handleContact('instagram')} className="text-gray-400 hover:text-white transition-all hover:scale-110" title="Instagram"><Instagram size={20} strokeWidth={1.5} /></button>
-                <button onClick={() => handleContact('linkedin')} className="text-gray-400 hover:text-white transition-all hover:scale-110" title="LinkedIn"><Linkedin size={20} strokeWidth={1.5} /></button>
+              <div className="flex gap-4 md:gap-6 items-center">
+                <button onClick={() => handleContact('email')} className="text-gray-400 hover:text-white transition-all hover:scale-110" title="Email"><Mail size={18} strokeWidth={1.5} /></button>
+                <button onClick={() => handleContact('instagram')} className="text-gray-400 hover:text-white transition-all hover:scale-110" title="Instagram"><Instagram size={18} strokeWidth={1.5} /></button>
+                
+                {/* Language Switcher */}
+                <button 
+                  onClick={toggleLanguage}
+                  className="ml-1 md:ml-2 px-3 py-1 border border-white/10 rounded-full text-[10px] font-bold text-white hover:bg-white hover:text-black transition-all w-16"
+                >
+                   {lang === 'en' ? 'EN / IT' : 'IT / EN'}
+                </button>
               </div>
             </div>
           </div>
         </nav>
 
         {/* Hero Section */}
-        <header className="min-h-screen flex flex-col justify-center px-6 pt-20 pb-10">
+        <header className="min-h-screen flex flex-col justify-center px-4 md:px-6 pt-24 pb-10 reveal-on-scroll">
           <div className="max-w-[90rem] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-24 items-center">
             
             <div className="lg:col-span-7 flex flex-col justify-center">
               {/* Status Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0f1f18] border border-emerald-900/30 mb-12 w-fit backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0f1f18] border border-emerald-900/30 mb-8 md:mb-12 w-fit backdrop-blur-md">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                <span className="text-emerald-500 text-[10px] font-black tracking-[0.2em] uppercase">Available for Hire</span>
+                <span className="text-emerald-500 text-[10px] font-black tracking-[0.2em] uppercase">{t.hero.status[lang]}</span>
               </div>
               
               {/* Main Title - Tilted & High End */}
-              <div className="mb-10 select-none leading-[0.9] -ml-1">
-                {/* LOGISTICS */}
-                <div className="text-[5rem] sm:text-[6rem] md:text-[8rem] lg:text-[7.5rem] xl:text-[9rem] font-black italic tracking-[-0.04em] mb-1">
+              {/* Adjusted for Mobile: using VW units to ensure fit */}
+              <div className="mb-8 md:mb-10 select-none leading-[0.9] -ml-1">
+                {/* STRATEGY */}
+                <div className="text-[13vw] sm:text-[6rem] md:text-[8rem] lg:text-[7rem] xl:text-[7rem] font-bold tracking-tight mb-1">
                   <InteractiveText 
-                    text="LOGISTICS" 
-                    gradientClass="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-gray-400 drop-shadow-2xl"
+                    text="STRATEGY" 
+                    gradientClass="text-white drop-shadow-2xl"
                   />
                 </div>
                 
                 {/* & DESIGN */}
-                <div className="flex items-center flex-wrap gap-x-6 text-[5rem] sm:text-[6rem] md:text-[8rem] lg:text-[7.5rem] xl:text-[9rem] font-black italic tracking-[-0.04em] mb-1">
-                  <span className="char-float text-emerald-400 transform skew-x-[-10deg]">&</span>
+                <div className="flex items-center flex-wrap gap-x-3 md:gap-x-6 text-[13vw] sm:text-[6rem] md:text-[8rem] lg:text-[7rem] xl:text-[7rem] font-bold tracking-tight mb-4">
+                  <span className="char-float text-emerald-400">&</span>
                   <InteractiveText 
                     text="DESIGN" 
                     gradientClass="text-emerald-400 drop-shadow-[0_0_30px_rgba(16,185,129,0.2)]"
                   />
                 </div>
                 
-                {/* FUSION. */}
-                <div className="text-[5rem] sm:text-[6rem] md:text-[8rem] lg:text-[7.5rem] xl:text-[9rem] font-black italic tracking-[-0.04em] text-transparent bg-clip-text bg-gradient-to-b from-gray-500 to-gray-800">
-                  <InteractiveText 
-                    text="FUSION." 
-                    gradientClass="text-transparent bg-clip-text bg-gradient-to-b from-gray-500 to-gray-800"
-                  />
+                {/* PORTFOLIO Subtitle/Badge */}
+                <div className="flex items-center gap-6 mt-4">
+                   <div className="h-[2px] w-16 md:w-32 bg-gradient-to-r from-emerald-500 to-transparent"></div>
+                   <span className="text-gray-400 font-mono text-sm md:text-xl tracking-[0.4em] uppercase">
+                     Portfolio 2025
+                   </span>
                 </div>
               </div>
               
-              <div className="max-w-lg mb-12">
-                <p className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed tracking-tight">
-                  I am <span className="text-white font-semibold border-b-2 border-emerald-500/50 pb-0.5">Marco Su</span>. A Supply Chain Planner & Digital Creator bridging the gap between operational data and visual innovation.
+              <div className="max-w-2xl mb-10 md:mb-12">
+                <p className="text-gray-400 text-base md:text-xl font-light leading-relaxed">
+                  <span className="text-white font-medium">{t.hero.introPrefix[lang]} Marco Su.</span> {t.hero.introMid[lang]} <span className="text-white border-b border-emerald-500 pb-0.5">UniFi</span>. {t.hero.introSuffix[lang]}
                 </p>
               </div>
-
-              <div className="flex flex-wrap gap-5 items-center">
+              
+              <div className="flex flex-wrap gap-4 md:gap-6">
                 <button 
-                  onClick={() => {
-                    setChatInitialInput('');
-                    setIsChatOpen(true);
-                  }}
-                  className="bg-emerald-500 text-black border border-emerald-400 px-8 py-4 rounded-full font-bold text-sm hover:bg-emerald-400 transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(16,185,129,0.4)] flex items-center gap-3 group"
+                  onClick={() => setIsChatOpen(true)}
+                  className="group px-6 py-3 md:px-8 md:py-4 bg-emerald-500 text-black rounded-full font-bold text-sm tracking-wide transition-all hover:scale-105 hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.5)] flex items-center gap-2 md:gap-3"
                 >
-                  <Mail size={20} strokeWidth={2.5} className="group-hover:-rotate-12 transition-transform" />
-                  Send a Message
+                  <MessageSquare className="w-4 h-4 md:w-5 md:h-5" />
+                  {t.hero.btnMessage[lang]}
                 </button>
                 
                 <button 
-                  onClick={() => handleContact('email')}
-                  className="px-8 py-4 rounded-full border border-white/10 hover:bg-white text-white hover:text-black text-sm font-bold transition-all flex items-center gap-2 group hover:border-white"
+                   onClick={() => handleContact('instagram')}
+                   className="px-6 py-3 md:px-8 md:py-4 rounded-full border border-white/10 text-white font-bold text-sm tracking-wide hover:bg-white/5 transition-all hover:border-white/20 flex items-center gap-2 md:gap-3"
                 >
-                  Copy Email <ArrowRight size={18} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />
+                  {t.hero.btnInsta[lang]}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>
 
-            {/* Minimalist Stat Card */}
-            <div className="lg:col-span-5 hidden lg:block relative">
-              <div className="w-full max-w-md ml-auto aspect-[4/5] rounded-[2rem] bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.7)] p-10 flex flex-col justify-between relative overflow-hidden hover:border-white/20 transition-colors duration-700">
-                 {/* Decorative Background Glows */}
-                 <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none"></div>
-                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full pointer-events-none"></div>
+            {/* Right Column - Status Card */}
+            <div className="lg:col-span-5 lg:h-full flex items-center justify-center lg:justify-end relative">
+               <div className="glass-panel p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] w-full max-w-md relative overflow-hidden hover:border-emerald-500/20 transition-colors duration-500 group">
+                  {/* Floating glow effect behind card */}
+                  <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-emerald-500 text-2xl md:text-3xl lg:text-4xl font-black italic tracking-tighter mb-2 leading-tight">
+                      <InteractiveText text={t.statusCard.university[lang]} />
+                    </h3>
+                    <div className="flex items-center gap-3 mb-6 md:mb-8">
+                       <BookOpen className="text-gray-400" size={18} />
+                       <span className="text-gray-300 font-medium text-base md:text-lg leading-tight">{t.statusCard.degree[lang]}</span>
+                    </div>
 
-                <div className="relative z-10">
-                   <div className="flex items-center gap-3 mb-6">
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-black tracking-[0.2em] uppercase">Current Status</span>
-                   </div>
-                   <h3 className="text-5xl font-bold text-white tracking-tight leading-tight mb-3">Based in<br/><span className="text-emerald-400">Rome</span></h3>
-                   <p className="text-gray-500 text-sm font-medium flex items-center gap-2"><MapPin size={14} /> Open to Relocation</p>
-                </div>
+                    <div className="mt-6 md:mt-8 flex flex-wrap items-center justify-between border-t border-white/5 pt-6 gap-4">
+                       <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 font-mono text-xs whitespace-nowrap">
+                         2025 — Present
+                       </span>
+                       <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                          <MapPin size={12} />
+                          {t.statusCard.city[lang]}, ITALY
+                       </div>
+                    </div>
 
-                <div className="space-y-8 relative z-10 mt-auto">
-                  <div className="space-y-3 group">
-                    <div className="flex justify-between text-[10px] font-black tracking-widest text-gray-500 uppercase group-hover:text-emerald-400 transition-colors">
-                      <span>Supply Chain</span>
-                      <span>95%</span>
-                    </div>
-                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500 w-[95%] shadow-[0_0_20px_rgba(16,185,129,0.5)]" />
+                    <div className="mt-6 md:mt-8 space-y-4">
+                       <p className="text-gray-400 font-light text-sm leading-relaxed">Focusing on digital communication strategies, media theory, and cross-cultural narratives.</p>
+                       <p className="text-gray-400 font-light text-sm leading-relaxed">Living and studying in the heart of the Renaissance.</p>
                     </div>
                   </div>
-                  <div className="space-y-3 group">
-                    <div className="flex justify-between text-[10px] font-black tracking-widest text-gray-500 uppercase group-hover:text-indigo-400 transition-colors">
-                      <span>Data Analysis</span>
-                      <span>90%</span>
-                    </div>
-                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full bg-indigo-500 w-[90%] shadow-[0_0_20px_rgba(99,102,241,0.5)]" />
-                    </div>
-                  </div>
-                  <div className="space-y-3 group">
-                    <div className="flex justify-between text-[10px] font-black tracking-widest text-gray-500 uppercase group-hover:text-purple-400 transition-colors">
-                      <span>Design</span>
-                      <span>85%</span>
-                    </div>
-                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full bg-purple-500 w-[85%] shadow-[0_0_20px_rgba(168,85,247,0.5)]" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+               </div>
             </div>
+
           </div>
         </header>
 
-        {/* Content Sections */}
-        <div id="projects" className="scroll-mt-24">
-           <Projects onOpenChat={handleProjectClick} />
-        </div>
-        <div id="experience" className="scroll-mt-24">
-           <Timeline />
-        </div>
-        <div id="skills" className="scroll-mt-24">
-           <Skills />
+        <div id="projects">
+          <Projects onOpenChat={handleProjectClick} lang={lang} />
         </div>
 
-        {/* Footer */}
-        <footer className="py-24 border-t border-white/5 relative bg-black">
-          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-            <div className="text-center md:text-left">
-               <h2 className="font-black italic text-3xl tracking-tighter text-white mb-3 hover:text-emerald-500 transition-colors cursor-default">MARCO.SU</h2>
-               <p className="text-gray-500 text-sm font-medium tracking-wide">Supply Chain Planner • Data Analyst • Creator</p>
-            </div>
-            
-            <div className="flex flex-col items-center md:items-end gap-8">
-               <div className="flex gap-5">
-                  <button onClick={() => handleContact('email')} className="w-14 h-14 rounded-2xl bg-[#0f0f0f] border border-white/5 flex items-center justify-center text-gray-400 hover:bg-emerald-600 hover:text-white hover:border-emerald-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-900/20" title="Email">
-                    <Mail size={22} strokeWidth={1.5} />
-                  </button>
-                  <button onClick={() => handleContact('instagram')} className="w-14 h-14 rounded-2xl bg-[#0f0f0f] border border-white/5 flex items-center justify-center text-gray-400 hover:bg-pink-600 hover:text-white hover:border-pink-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-900/20" title="Instagram">
-                    <Instagram size={22} strokeWidth={1.5} />
-                  </button>
-                  <button onClick={() => handleContact('linkedin')} className="w-14 h-14 rounded-2xl bg-[#0f0f0f] border border-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-900/20" title="LinkedIn">
-                    <Linkedin size={22} strokeWidth={1.5} />
-                  </button>
-               </div>
-               <p className="text-gray-700 text-xs font-bold tracking-widest uppercase">
-                 © {new Date().getFullYear()} Marco Su. All Rights Reserved.
-               </p>
-            </div>
-          </div>
+        <div id="experience">
+          <Timeline lang={lang} />
+        </div>
+        
+        <div id="skills">
+          <Skills lang={lang} />
+        </div>
+
+        <footer className="py-12 text-center border-t border-white/5 bg-black/40 backdrop-blur-sm mt-20 px-4 reveal-on-scroll">
+          <p className="text-gray-600 text-xs tracking-widest uppercase font-bold">
+            &copy; {new Date().getFullYear()} Marco Su. {t.footer.rights[lang]}
+          </p>
         </footer>
       </div>
 
-      {/* Floating Contact Button (if closed) */}
-      {!isChatOpen && (
-        <button
-          onClick={() => {
-            setChatInitialInput('');
-            setIsChatOpen(true);
-          }}
-          className="fixed bottom-8 right-8 p-5 bg-emerald-500 text-black rounded-full shadow-[0_10px_40px_-10px_rgba(16,185,129,0.5)] hover:scale-110 hover:bg-emerald-400 transition-all z-40 group border-4 border-black/20 hover:border-emerald-300/50"
-        >
-          <Mail size={28} strokeWidth={2.5} className="group-hover:-rotate-12 transition-transform duration-300" />
-        </button>
-      )}
+      {/* Floating Action Button */}
+      <button 
+        onClick={() => setIsChatOpen(true)}
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 w-14 h-14 md:w-16 md:h-16 bg-emerald-500 rounded-full shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center justify-center text-black hover:scale-110 hover:bg-emerald-400 transition-all z-40"
+      >
+        <Mail size={24} strokeWidth={2} />
+      </button>
 
-      {/* Message Form Interface */}
-      <AIChat 
-        isOpen={isChatOpen} 
-        onClose={() => setIsChatOpen(false)} 
-        initialInput={chatInitialInput}
-      />
+      {/* Messaging Interface */}
+      <AIChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} initialInput={chatInitialInput} lang={lang} />
     </div>
   );
 }
