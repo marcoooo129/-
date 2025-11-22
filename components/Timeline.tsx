@@ -10,33 +10,33 @@ const TimelineItem: React.FC<{
   location: string;
   details: string[];
 }> = ({ type, title, subtitle, period, location, details }) => (
-  <div className="relative pl-12 pb-16 last:pb-0 group">
+  <div className="relative pl-16 pb-24 last:pb-0 group">
     {/* Vertical Line */}
-    <div className="absolute left-[7px] top-2 bottom-0 w-px bg-gradient-to-b from-white/20 to-transparent group-last:hidden"></div>
+    <div className="absolute left-[9px] top-4 bottom-0 w-[2px] bg-gradient-to-b from-white/10 to-transparent group-last:hidden"></div>
     
     {/* Node */}
-    <div className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-[#030303] shadow-[0_0_0_4px_rgba(255,255,255,0.05)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_0_6px_rgba(16,185,129,0.2)] ${type === 'work' ? 'bg-emerald-500' : 'bg-indigo-500'}`}></div>
+    <div className={`absolute left-0 top-4 w-5 h-5 rounded-full border-4 border-[#030303] transition-all duration-500 group-hover:scale-125 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] ${type === 'work' ? 'bg-emerald-500' : 'bg-white'}`}></div>
     
-    <div className="glass-panel p-8 rounded-2xl hover:bg-white/5 transition-all duration-300 hover:border-white/10">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
+    <div className="glass-panel p-10 rounded-[2rem] hover:bg-white/[0.07] transition-all duration-500 border border-white/5 hover:border-emerald-500/30 hover:-translate-y-1 group-hover:shadow-2xl">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-8">
         <div>
-          <h3 className="text-2xl font-syne font-bold text-white mb-1 group-hover:text-emerald-300 transition-colors">{title}</h3>
-          <div className="flex items-center gap-2 text-gray-400">
-             {type === 'work' ? <Briefcase size={14} /> : <GraduationCap size={14} />}
-             <span className="text-lg">{subtitle}</span>
+          <h3 className="text-3xl font-bold tracking-tight text-white mb-2 group-hover:text-emerald-400 transition-colors">{title}</h3>
+          <div className="flex items-center gap-3 text-gray-400 text-base">
+             {type === 'work' ? <Briefcase size={18} className="text-emerald-500" /> : <GraduationCap size={18} className="text-white" />}
+             <span className="font-medium">{subtitle}</span>
           </div>
         </div>
-        <div className="text-sm text-right mt-2 md:mt-0">
-          <div className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-emerald-400 font-mono text-xs mb-1">
+        <div className="text-right mt-6 md:mt-0 flex flex-row md:flex-col items-center md:items-end justify-between md:justify-start gap-4">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 font-mono text-xs mb-1">
             {period}
           </div>
-          <p className="flex items-center gap-1 justify-end mt-1 text-gray-500 text-xs uppercase tracking-wider"><MapPin size={10} /> {location}</p>
+          <p className="flex items-center gap-1.5 justify-end mt-1 text-gray-500 text-[10px] uppercase tracking-wider font-bold"><MapPin size={12} /> {location}</p>
         </div>
       </div>
       
-      <div className="space-y-3 mt-6">
+      <div className="space-y-4 pt-6 border-t border-white/5">
         {details.map((detail, idx) => (
-          <p key={idx} className="text-gray-400 leading-relaxed pl-4 border-l border-white/10 hover:border-emerald-500/50 transition-colors">
+          <p key={idx} className="text-gray-400 leading-relaxed text-base font-light">
             {detail}
           </p>
         ))}
@@ -48,14 +48,22 @@ const TimelineItem: React.FC<{
 const Timeline = () => {
   return (
     <div className="max-w-5xl mx-auto py-32 px-6">
-      <div className="mb-16">
-          <span className="text-emerald-500 font-mono text-xs tracking-widest uppercase mb-2 block">Career Path</span>
-          <h2 className="text-4xl md:text-6xl font-syne font-bold text-white">
-            Experience & <br/><span className="text-gray-600">Education.</span>
+      <div className="mb-24">
+          <span className="text-emerald-500 font-black text-[10px] tracking-[0.3em] uppercase mb-4 block">Career Path</span>
+          <h2 className="text-5xl md:text-7xl font-black italic tracking-tighter text-white leading-none">
+            {"Experience &".split("").map((char, i) => (
+                <span key={i} className="char-float inline-block whitespace-pre" style={{transitionDelay: `${i*20}ms`}}>{char}</span>
+            ))}
+             <br/>
+             <span className="text-gray-600">
+                {"Education.".split("").map((char, i) => (
+                    <span key={`edu-${i}`} className="char-float inline-block whitespace-pre" style={{transitionDelay: `${i*20 + 300}ms`}}>{char}</span>
+                ))}
+             </span>
           </h2>
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-4">
         {EXPERIENCE.map(exp => (
           <TimelineItem
             key={exp.id}

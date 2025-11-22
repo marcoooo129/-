@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, Boxes, TrendingUp } from 'lucide-react';
+import { ArrowUpRight, Boxes, TrendingUp, MessageCircle } from 'lucide-react';
 import { PROJECTS } from '../constants';
 
 interface ProjectsProps {
@@ -8,74 +8,77 @@ interface ProjectsProps {
 
 const Projects: React.FC<ProjectsProps> = ({ onOpenChat }) => {
   return (
-    <div className="max-w-7xl mx-auto py-32 px-6">
-      <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8">
+    <div className="max-w-[90rem] mx-auto py-32 px-6 md:px-12">
+      <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-white/5 pb-12">
         <div>
-           <span className="text-emerald-500 font-mono text-xs tracking-widest uppercase mb-2 block">Selected Works</span>
-           <h2 className="text-4xl md:text-6xl font-syne font-bold text-white">
-            Case Studies
+           <span className="text-emerald-500 font-black text-[10px] tracking-[0.3em] uppercase mb-4 block">Selected Works</span>
+           <h2 className="text-5xl md:text-7xl font-black italic tracking-tighter text-white">
+              {"Case Studies".split("").map((char, i) => (
+                <span key={i} className="char-float inline-block whitespace-pre" style={{transitionDelay: `${i*20}ms`}}>{char}</span>
+              ))}
            </h2>
         </div>
         <div className="hidden md:block text-right">
-           <p className="text-gray-400 text-sm max-w-xs">
+           <p className="text-gray-400 text-lg max-w-md leading-relaxed font-light">
              Strategic initiatives focusing on cost reduction, logistics optimization, and digital integration.
            </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-12">
+      <div className="grid grid-cols-1 gap-20">
         {PROJECTS.map((project) => (
-          <div key={project.id} className="group relative rounded-[2rem] bg-[#0a0a0a] border border-white/10 overflow-hidden hover:border-emerald-500/30 transition-colors duration-500">
+          <div key={project.id} className="group relative rounded-[3rem] bg-[#080808] border border-white/5 overflow-hidden hover:border-emerald-500/30 transition-all duration-700 hover:shadow-[0_0_80px_-20px_rgba(16,185,129,0.15)]">
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
                {/* Visual Side */}
-               <div className="relative bg-gradient-to-br from-emerald-900/20 to-black p-8 lg:p-12 flex flex-col justify-center items-center overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.15]" />
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/20 rounded-full blur-[100px] group-hover:bg-emerald-500/30 transition-all duration-700" />
+               <div className="relative bg-[#0c0c0c] p-12 lg:p-16 flex flex-col justify-center items-center overflow-hidden group-hover:bg-[#0e100f] transition-colors duration-700">
+                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-[120px] group-hover:bg-emerald-500/15 transition-all duration-700" />
+                  <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-500/5 rounded-full blur-[100px]" />
                   
                   {/* Conceptual Icon Representation */}
-                  <div className="relative z-10 grid grid-cols-2 gap-4 opacity-80 group-hover:scale-105 transition-transform duration-700">
-                    <div className="w-24 h-32 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 flex items-center justify-center">
-                        <Boxes className="text-emerald-400 w-8 h-8" />
+                  <div className="relative z-10 grid grid-cols-2 gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-105 group-hover:rotate-2">
+                    <div className="w-32 h-40 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 flex items-center justify-center shadow-2xl">
+                        <Boxes className="text-white w-12 h-12" strokeWidth={1.5} />
                     </div>
-                    <div className="w-24 h-32 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 mt-8 flex items-center justify-center">
-                        <TrendingUp className="text-emerald-400 w-8 h-8" />
+                    <div className="w-32 h-40 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 mt-16 flex items-center justify-center shadow-2xl">
+                        <TrendingUp className="text-white w-12 h-12" strokeWidth={1.5} />
                     </div>
                   </div>
-                  <div className="mt-12 relative z-10">
-                    <span className="px-4 py-2 rounded-full bg-black/50 backdrop-blur text-xs border border-white/10 text-gray-300">
+                  <div className="mt-16 relative z-10">
+                    <span className="px-6 py-3 rounded-full bg-white/5 backdrop-blur-md text-xs font-bold tracking-wider border border-white/10 text-gray-400 group-hover:text-white group-hover:border-emerald-500/40 transition-all uppercase">
                       Optimization Project
                     </span>
                   </div>
                </div>
 
                {/* Content Side */}
-               <div className="p-8 lg:p-16 flex flex-col justify-between relative">
+               <div className="p-10 lg:p-20 flex flex-col justify-between relative bg-black/20 backdrop-blur-sm">
                  <div>
-                    <div className="flex justify-between items-start">
-                        <span className="text-emerald-500 font-bold tracking-wide text-xs uppercase">{project.role}</span>
-                        <span className="text-gray-500 text-xs font-mono">{project.period}</span>
+                    <div className="flex justify-between items-start mb-10">
+                        <span className="px-4 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold tracking-widest text-[10px] uppercase">{project.role}</span>
+                        <span className="text-gray-500 text-xs font-mono font-medium">{project.period}</span>
                     </div>
                     
-                    <h3 className="text-3xl md:text-4xl font-syne font-bold text-white mt-4 mb-6 leading-tight">
+                    <h3 className="text-4xl lg:text-5xl font-black italic tracking-tighter text-white mb-10 group-hover:text-emerald-50 transition-colors leading-tight">
                       {project.title}
                     </h3>
                     
-                    <div className="space-y-8">
-                      <div>
-                        <h4 className="text-white text-sm font-bold uppercase mb-2 tracking-wider flex items-center gap-2">
-                           <span className="w-1.5 h-1.5 bg-white rounded-full"></span> Challenge
+                    <div className="space-y-10">
+                      <div className="group/item pl-6 border-l-2 border-white/10 hover:border-emerald-500 transition-colors">
+                        <h4 className="text-gray-500 text-[10px] font-bold uppercase mb-3 tracking-[0.2em] group-hover/item:text-white transition-colors">
+                           Challenge
                         </h4>
-                        <p className="text-gray-400 leading-relaxed text-lg">
+                        <p className="text-gray-300 leading-relaxed text-lg font-light">
                           {project.description}
                         </p>
                       </div>
                       
-                      <div className="bg-emerald-900/10 p-6 rounded-xl border border-emerald-500/10">
-                        <h4 className="text-emerald-400 text-sm font-bold uppercase mb-2 tracking-wider flex items-center gap-2">
-                           <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Impact
+                      <div className="bg-white/5 p-8 rounded-3xl border border-white/5 hover:bg-white/[0.07] transition-colors">
+                        <h4 className="text-emerald-400 text-[10px] font-bold uppercase mb-4 tracking-[0.2em] flex items-center gap-2">
+                           Impact
                         </h4>
-                        <p className="text-gray-300 leading-relaxed">
+                        <p className="text-gray-200 leading-relaxed text-base font-medium">
                           {project.impact}
                         </p>
                       </div>
@@ -84,11 +87,11 @@ const Projects: React.FC<ProjectsProps> = ({ onOpenChat }) => {
                  
                  <div 
                     onClick={() => onOpenChat(project.title)}
-                    className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between group/link cursor-pointer"
+                    className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between group/link cursor-pointer"
                  >
-                    <span className="text-white font-medium group-hover/link:text-emerald-400 transition-colors">View Case Detail (Ask AI)</span>
-                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover/link:bg-emerald-500 group-hover/link:text-white transition-all">
-                        <ArrowUpRight size={18} />
+                    <span className="text-white font-bold text-sm group-hover/link:text-emerald-400 transition-colors tracking-widest uppercase">Inquire about Project</span>
+                    <div className="w-14 h-14 rounded-full bg-white/5 border border-white/5 flex items-center justify-center group-hover/link:bg-emerald-500 group-hover/link:text-black transition-all transform group-hover/link:rotate-45 group-hover/link:scale-110">
+                        <ArrowUpRight size={24} strokeWidth={2} />
                     </div>
                  </div>
                </div>
