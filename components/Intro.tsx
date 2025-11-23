@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-const WORDS = ["FIRENZE", "STRATEGY", "DESIGN", "PORTFOLIO", "MARCO SU"];
+const WORDS = ["LOADING...", "STRATEGY", "DESIGN", "PORTFOLIO", "MARCO SU"];
 
 interface IntroProps {
   onComplete: () => void;

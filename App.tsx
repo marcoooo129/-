@@ -180,8 +180,8 @@ function App() {
               </div>
               
               <div className="max-w-2xl mb-10 md:mb-12">
-                <p className="text-gray-400 text-base md:text-xl font-light leading-relaxed">
-                  <span className="text-white font-medium">{t.hero.introPrefix[lang]} Marco Su.</span> {t.hero.introMid[lang]} <span className="text-white border-b border-emerald-500 pb-0.5">UniFi</span>. {t.hero.introSuffix[lang]}
+                <p className="text-gray-300 text-xl md:text-2xl font-sans font-light leading-relaxed tracking-wide antialiased">
+                  <span className="text-white font-semibold">{t.hero.introPrefix[lang]} Marco Su.</span> {t.hero.introMid[lang]} <span className="text-white font-semibold">UniFi</span>. {t.hero.introSuffix[lang]}
                 </p>
               </div>
               
